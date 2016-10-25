@@ -49,4 +49,42 @@ such function will be named checkForSensors(). (This functions and its comments 
         checkForSensors();
     }
     
-Now is time to use the onSensorChanged(SensorEvent event) function
+Now is time to use the onSensorChanged(SensorEvent event) function. In case the function is triggered then we will only be
+checking for wich sensor is which in order to not confuse the app, because we will be using two sensors. Every time the function
+is called, then we will only need to know which sensor is which.
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        SensorEvent sensorEvent = event;
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){ /* used to identify if the event was triggered by the accelerometer or the gyroscope */
+            this.drawView.addX(event.values[0]); /* To add the value given by the accelerometer to X in DrawView class */
+            this.drawView.addY(event.values[1]); /* To add the value given by the accelerometer to Y in DrawView class */
+            this.drawView.invalidate(); /* To refresh the onDraw in DrawView class*/
+            //System.out.println("x="+event.values[0]+"|y="+event.values[1]+"|z="+event.values[2]);
+        }
+        if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+            this.drawView.setGyroX(String.valueOf(event.values[0])); /* Set x text of the gyroscope */
+            this.drawView.setGyroY(String.valueOf(event.values[1])); /* Set y text of the gyroscope */
+            this.drawView.setGyroZ(String.valueOf(event.values[2])); /* Set z text of the gyroscope */
+            this.drawView.invalidate(); /* To refresh the onDraw in DrawView class*/
+        }
+    }
+
+The last step is to stop the sensor once the applications is exited, for this we will use the onResume() and onPause() functions,
+this is for the app to not drain the battery of your device.
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /* when the application resumes then the sensor can start listening again */
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mGyroSensorManager.registerListener(this, mGyroSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        /* when the application pauses, then the sensor should stop listening to avoid wasting the battery of the device */
+        mSensorManager.unregisterListener(this);
+        mGyroSensorManager.unregisterListener(this);
+    }
