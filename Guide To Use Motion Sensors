@@ -57,10 +57,10 @@ is called, then we will only need to know which sensor is which.
     public void onSensorChanged(SensorEvent event) {
         SensorEvent sensorEvent = event;
         if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER){ /* used to identify if the event was triggered by the accelerometer or the gyroscope */
-            //System.out.println("Accelerometer: x="+event.values[0]+"|y="+event.values[1]+"|z="+event.values[2]);
+            System.out.println("Accelerometer: x="+event.values[0]+"|y="+event.values[1]+"|z="+event.values[2]);
         }
         if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-            //System.out.println("Gyroscope:     x="+event.values[0]+"|y="+event.values[1]+"|z="+event.values[2]);
+            System.out.println("Gyroscope:     x="+event.values[0]+"|y="+event.values[1]+"|z="+event.values[2]);
         }
     }
     
