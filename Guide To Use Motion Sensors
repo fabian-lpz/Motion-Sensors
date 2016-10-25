@@ -1,0 +1,52 @@
+In order to use the Sensor of the devide you need to declare two variables that will be used that are 
+the Sensor Manager and the Sensor. The Sensor Manager will check for the availability of the Sensor, and
+give us access to it.
+
+  private SensorManager mSensorManager;           //This manager will be used for the Accelerometer
+  private SensorManager mGyroSensorManager;       //This manager will be used for the Gyroscope
+
+  private Sensor mSensor;                         //Sensor variable for the Accelerometer
+  private Sensor mGyroSensor;                     //Sensor variable for the Gyroscope
+  
+Before starting to look for sensors we need to create an instance of SensorEventListener and implement the interface:
+
+    public class MainActivity extends AppCompatActivity implements SensorEventListener{
+      ...
+    }
+The next step is to implement the functions in the interface, wich are two: 
+  - onAccuracyChanged(Sensor sensor, int accuracy)
+  - onSensorChanged(SensorEvent event)
+For purposes of this lesson, we will only be using onSensorChanged to controll the events created by the sensors.
+  
+To look for the sensor we will create a function that will be performed at onCreate() 
+such function will be named checkForSensors(). (This functions and its comments are also in the code)
+
+   private void checkForSensors(){
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); /* The Sensor Manager for the Accelerometer */
+        mGyroSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE); /* The Sensor Manager for the Gyroscope */
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){ /* Check if it's available */
+            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); /* Obtain the Sensor from the manager and keep it in the mSensor Variable */
+            System.out.println("There is an accelerometer");
+        }
+        else {
+            // In this part we could exit the application because we don't have an accelerometer
+            System.out.println("No Accelerometer Detected");
+        }
+
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null){ /* Check if it's available */
+            mGyroSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE); /* Obtain the Sensor from the manager and keep it in the mGyroSensor Variable */
+            System.out.println("There is a Gyroscope");
+        }
+        else {
+            // In this part we could exit the application because we don't have a gyroscope
+            System.out.println("No Gyroscope Detected");
+        }
+    }
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        ...
+        checkForSensors();
+    }
+    
+Now is time to use the onSensorChanged(SensorEvent event) function
